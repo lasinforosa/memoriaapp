@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>MemoriaApp - Llista de Jugadors</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        /* Estils per al formulari */
+        .filtres { background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
+        .filtres h3 { margin-top: 0; }
+        .filtres label { font-weight: bold; margin-right: 5px; }
+        .filtres select, .filtres input { margin-right: 15px; margin-bottom: 10px; padding: 5px; }
+        
+        /* Estils per a la taula */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        img { max-width: 50px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <!-- BARRA DE NAVEGACIÓ -->
+    <nav style="background: #333; color: white; padding: 10px 20px; margin-bottom: 20px; display: flex; justify-content: space-between;">
+        <div>
+            <strong>MemoriaApp</strong>
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                Hola, <strong>{{ user.username }}</strong> |
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background:none; border:none; color:white; cursor:pointer; text-decoration:underline;">Sortir</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" style="color:white">Entrar</a> |
+                <a href="{% url 'registre' %}" style="color:white">Registrar-se</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% if messages %}
+        <div style="text-align: center; margin: 20px;">
+            {% for message in messages %}
+                <div style="padding: 10px; background: {% if message.tags == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; border-radius: 5px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h1>MemoriaApp - Galeria de Jugadors</h1>
+
+    <!-- FORMULARI DE FILTRES -->
+    <div class="filtres">
+        <h3>Filtrar Jugadors</h3>
+        <form method="get">
+            {{ filter.form.as_p }}
+            <button type="submit">Aplicar filtres</button>
+            <a href="/">Netejar filtres</a>
+        </form>
+    </div>
+
+    <!-- BOTÓ DE JOC -->
+    <div style="margin: 20px 0; padding: 15px; background-color: #e7f3fe; border-left: 5px solid #2196F3; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <strong>Jugadors seleccionats:</strong> {{ jugadors.count }}
+        </div>
+        <div>
+            <a href="{% url 'quiz_club' %}?{{ query_string }}" class="btn" style="background-color: #28a745; font-size: 1.2em; padding: 10px 20px;">
+                🧠 Jugar amb aquests jugadors
+            </a>
+        </div>
+    </div>
+   
+
+    <!-- TAULA DE RESULTATS -->
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Foto</th>
+                <th><a href="?{% if query_string %}{{ query_string }}&{% endif %}sort=nom_i_cognoms">Nom ⇅</a></th>
+                <th>Club</th>
+                <th><a href="?{% if query_string %}{{ query_string }}&{% endif %}sort=-elo_fide">Elo Fide ⇅</a></th>
+                <th><a href="?{% if query_string %}{{ query_string }}&{% endif %}sort=-elo_regio">Elo Local ⇅</a></th>
+                <th>Categoria</th>
+                <th>Província</th>
+                <th>Accions</th>
+             </tr>
+        </thead>
+        <tbody>
+            {% for jugador in jugadors %}
+            <tr>
+                <td style="text-align:center; color:#888;">{{ forloop.counter }}</td>
+                <td>
+                    {% if jugador.foto %}
+                        <img src="{{ jugador.foto.url }}" alt="Foto">
+                    {% else %}
+                        <div style="width:50px; height:50px; background:#eee; text-align:center; font-size:10px; line-height:50px;">No foto</div>
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'detall_jugador' jugador.id %}" style="text-decoration: none; color: #007bff; font-weight: bold;">{{ jugador.nom_i_cognoms }}</a></td>
+                <td>{{ jugador.club.nom|default:"-" }}</td>
+                <td>{{ jugador.elo_fide|default:"-" }}</td>
+                <td>{{ jugador.elo_regio|default:"-" }}</td>
+                <td>{{ jugador.categoria|default:"-" }}</td>
+                <td>{{ jugador.club.provincia|default:"-" }}</td>
+                <td>
+                    <td>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'pujar_foto' jugador.id %}?next={{ request.get_full_path|urlencode }}" class="btn" style="background-color: #6c757d; font-size: 0.8em; padding: 5px 10px;">
+                                Pujar Foto
+                            </a>
+                        {% endif %}
+                    </td>
+                </td>    
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No s'han trobat jugadors amb aquests filtres.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <p>Total jugadors: {{ jugadors.count }}</p>
+</body>
+</html>

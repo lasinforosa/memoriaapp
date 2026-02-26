@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block userlinks %}
+    <!-- Afegim el nostre enllaç abans dels enllaços estàndard -->
+    <a href="{% url 'llista_jugadors' %}" style="margin-right: 20px; font-weight: bold; color: #417690;">⬅ Tornar a l'App</a>
+    {{ block.super }}
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">MemoriaApp - Administració</a></h1>
+{% endblock %}

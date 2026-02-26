@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ jugador.nom_i_cognoms }} - MemoriaApp</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
+        .profile-card { display: flex; gap: 30px; border: 1px solid #ddd; padding: 20px; border-radius: 10px; background: #fff; }
+        .profile-photo img { max-width: 250px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .profile-info h1 { margin: 0 0 10px 0; }
+        .info-row { margin: 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .label { font-weight: bold; color: #555; }
+        .external-links { margin-top: 20px; display: flex; gap: 15px; }
+        .btn-link { padding: 10px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .btn-link.secondary { background: #6c757d; }
+        .actions { margin-top: 20px; border-top: 2px solid #eee; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'llista_jugadors' %}">⬅ Tornar a la llista</a>
+
+    <div class="profile-card">
+        <div class="profile-photo">
+            {% if jugador.foto %}
+                <img src="{{ jugador.foto.url }}" alt="Foto">
+            {% else %}
+                <div style="width:250px; height:250px; background:#eee; display:flex; align-items:center; justify-content:center;">Sense Foto</div>
+            {% endif %}
+            
+            <div style="margin-top:10px;">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'pujar_foto' jugador.id %}?next={{ request.path }}" class="btn-link secondary" style="display:block; text-align:center;">
+                        Canviar Foto
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <h1>{{ jugador.nom_i_cognoms }}</h1>
+            
+            <div class="info-row">
+                <span class="label">Club:</span> {{ jugador.club.nom|default:"Sense club" }}
+            </div>
+            <div class="info-row">
+                <span class="label">Categoria:</span> {{ jugador.categoria|default:"-" }}
+            </div>
+            <div class="info-row">
+                <span class="label">ELO FIDE:</span> {{ jugador.elo_fide|default:"-" }}
+            </div>
+            <div class="info-row">
+                <span class="label">ELO REGIO:</span> {{ jugador.elo_regio|default:"-" }}
+            </div>
+            <div class="info-row">
+                <span class="label">Sexe:</span> {{ jugador.get_sexe_display|default:"-" }}
+            </div>
+            <div class="info-row">
+                <span class="label">Data Naixement:</span> {{ jugador.data_naixement|default:"Desconeguda" }}
+            </div>
+
+            <!-- ENLLAÇOS EXTERNS -->
+            <div class="external-links">
+                {% if link_fide %}
+                    <a href="{{ link_fide }}" target="_blank" class="btn-link">Fitxa FIDE 🌐</a>
+                {% endif %}
+                {% if link_fce %}
+                    <a href="{{ link_fce }}" target="_blank" class="btn-link secondary">Fitxa FCE 🌐</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ZONA D'EDICIÓ (Per l'admin o propietari) -->
+    {% if user.is_staff %}
+    <div class="actions">
+        <h3>Edició (Administrador)</h3>
+        <p>Per modificar dades (Nom, ELO, Club...), entra al panell d'administració.</p>
+        <a href="/admin/core/jugador/{{ jugador.id }}/change/" class="btn-link" style="background:#28a745;">Editar al Admin</a>
+    </div>
+    {% endif %}
+
+</body>
+</html>

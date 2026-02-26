@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>MemoriaApp - Quiz Visual</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; text-align: center; background-color: #f4f4f9; }
+        
+        /* Carta del Jugador */
+        .jugador-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            margin-bottom: 30px; 
+        }
+        .jugador-foto { 
+            width: 250px; 
+            height: 250px; 
+            object-fit: cover; /* Important perquè no es deformi */
+            border-radius: 50%; 
+            border: 5px solid #007bff; 
+            margin-bottom: 15px; 
+        }
+        
+        /* Botons d'opcions */
+        .opcions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .btn-opcio { 
+            padding: 15px; 
+            font-size: 1.1em; 
+            cursor: pointer; 
+            background-color: white; 
+            color: #333; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            transition: all 0.2s;
+        }
+        .btn-opcio:hover { background-color: #e9ecef; border-color: #aaa; }
+        
+        /* Missatges */
+        .missatge { font-size: 1.3em; margin: 20px 0; padding: 15px; border-radius: 8px; font-weight: bold; }
+        .correcte { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        
+        .menu { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="menu">
+        <a href="{% url 'llista_jugadors' %}" style="color:#555;">⬅ Tornar a la llista</a>
+    </div>
+
+    {% if error %}
+        <div style="color: red; padding: 20px;">{{ error }}</div>
+    {% else %}
+
+        {% if missatge %}
+            <div class="missatge {% if encert %}correcte{% else %}error{% endif %}">
+                {{ missatge }}
+            </div>
+        {% endif %}
+
+        {% if jugador %}
+            <div class="jugador-card">
+                <!-- MOSTREM LA FOTO REAL -->
+                <img src="{{ jugador.foto.url }}" class="jugador-foto" alt="Foto Jugador">
+                
+                <!-- Pista: Si vols mostrar el club o l'elo com a pista, descomenta això:
+                <div style="color: #666; font-size: 0.9em;">Club: {{ jugador.club.nom }}</div> 
+                -->
+            </div>
+
+            <h3>Qui és aquesta persona?</h3>
+
+            <form method="post" action="{% url 'quiz_club' %}?{{ query_string }}" class="opcions">
+                {% csrf_token %}
+                <input type="hidden" name="jugador_id" value="{{ jugador.id }}">
+
+                {% for opcio in opcions %}
+                    <button type="submit" name="resposta" value="{{ opcio.id }}" class="btn-opcio">
+                        {{ opcio.nom_i_cognoms }}
+                    </button>
+                {% endfor %}
+            </form>
+        {% endif %}
+
+        <div style="margin-top: 30px;">
+            <a href="{% url 'quiz_club' %}?{{ query_string }}" class="btn" style="background-color: #17a2b8; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                Següent -> 
+            </a>
+        </div>
+
+    {% endif %}
+
+</body>
+</html>

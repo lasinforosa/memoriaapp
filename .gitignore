@@ -1,0 +1,22 @@
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+
+# Entorn Virtual
+.venv/
+env/
+venv/
+
+# Base de dades local
+db.sqlite3
+
+# Fitxers pujats localment (fotos)
+media/
+
+# Variables d'entorn
+.env
+
+# IDE
+.idea/
+.vscode/

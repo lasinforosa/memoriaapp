@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registre - MemoriaApp</title>
+    <style>
+        body { font-family: sans-serif; max-width: 400px; margin: 40px auto; }
+        input { width: 100%; padding: 10px; margin: 5px 0 15px 0; }
+        button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; }
+        .error { color: red; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h2>Crear compte</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Registrar-me</button>
+    </form>
+    <p>Ja tens compte? <a href="{% url 'login' %}">Entra aquí</a></p>
+</body>
+</html>

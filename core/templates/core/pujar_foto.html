@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Pujar Foto</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; text-align: center; }
+        .preview { width: 200px; height: 200px; background: #eee; margin: 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+        input[type="file"] { margin: 20px 0; }
+        button { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <h2>Pujar foto per a: {{ jugador.nom_i_cognoms }}</h2>
+    
+    <!-- Mostrar edat per informar a l'usuari -->
+    {% if jugador.edat %}
+        <p>Edat: {{ jugador.edat }} anys</p>
+    {% else %}
+        <p>Data de naixement desconeguda.</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Preview de la foto actual (si en té) -->
+        <div class="preview">
+            {% if jugador.foto %}
+                <img src="{{ jugador.foto.url }}" style="max-width:100%; max-height:100%; border-radius:10px;">
+            {% else %}
+                Sense Foto
+            {% endif %}
+        </div>
+
+        <input type="file" name="foto" accept="image/*" required>
+        <br>
+        <button type="submit">Guardar Foto</button>
+    </form>
+    
+    <br>
+    <a href="{{ next_url }}">Cancel·lar i tornar</a>
+
+    <!-- Aquí es veuran els missatges d'error (ex: menors d'edat) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div style="margin-top:20px; color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
+
