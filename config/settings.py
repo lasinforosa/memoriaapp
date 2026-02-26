@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage', # <--- Abans de cloudinary
+    'cloudinary',
     'django_filters',
     'import_export',
     'core',
@@ -142,3 +144,13 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
             }
     }
+
+# Configuració Cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
+# Canviem el backend d'emmagatzematge per defecte
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
