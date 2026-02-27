@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-imctrcx@&oy6r89rbdus72$jdx%pq)!)#()xe4*rr4uv=f-p3)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.nuvoldescacs.net', '.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.nuvoldescacs.net']
 
 
 # Application definition
@@ -115,11 +115,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # <--- Afegir això
 
 # Configuració de WhiteNoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_REDIRECT_URL = 'llista_jugadors'
 LOGOUT_REDIRECT_URL = 'llista_jugadors'
