@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from pathlib import Path
 import dj_database_url
 
@@ -30,7 +32,7 @@ SECRET_KEY = 'django-insecure-imctrcx@&oy6r89rbdus72$jdx%pq)!)#()xe4*rr4uv=f-p3)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.nuvoldescacs.net']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost', '127.0.0.1').split(',')
 
 
 # Application definition
