@@ -163,7 +163,7 @@ def pujar_foto(request, jugador_id):
     if jugador.categoria:
         cat_upper = jugador.categoria.upper()
         # Llista de paraules que indiquen menor d'edat
-        paraules_menors = ['S14', 'S16', 'S18', 'SUB14', 'SUB16', 'SUB18', 'SUB-14', 'SUB-16', 'SUB-18', 'U14', 'U16', 'U18']
+        paraules_menors = ['S14', 'SUB14', 'SUB-14', 'U14', U16']
         # Comprovem si alguna d'aquestes paraules és dins la categoria
         if any(paraula in cat_upper for paraula in paraules_menors):
             es_menor = True
